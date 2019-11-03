@@ -20,23 +20,36 @@ There are two things you can do about this warning:
 (require 'use-package)
 
 (add-to-list 'load-path 
-	     "~/.emacs.d")
+	     "~/.emacs.d/lisp")
 
-;; Themes
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Look and Feel
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-to-list 'custom-theme-load-path 
 	     "~/.emacs.d/themes/")
 
 (load-theme 'monokai t)
 
-;; (add-to-list 'default-frame-alist 
-;; 	     '(font . "Source Code Pro-10"))
-;; (set-face-attribute 'default 
-;; 		    t :font "Source Code Pro-10")
+(set-face-attribute 'default nil
+                    :family "monospace"
+                    :height 140
+                    :weight 'normal
+                    :width 'normal)
 
+(setq monokai-height-minus-1 0.8
+      monokai-height-plus-1 1.1
+      monokai-height-plus-2 1.15
+      monokai-height-plus-3 1.2
+      monokai-height-plus-4 1.3)
 
+(tool-bar-mode -1)
+(setq visible-bell 1)
+(linum-mode 1)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Org Mode
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (add-hook 'org-mode-hook 'my/org-mode-hook)
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c l") 'org-store-link)
@@ -55,9 +68,9 @@ There are two things you can do about this warning:
 (setq org-directory "~/Desktop/org/")
 (setq org-agenda-files
       (list org-directory))
-;;    "~/Desktop/org/todo.org"))
 
-(setq org-default-notes-file (concat org-directory "notes.org"))
+(setq org-default-notes-file
+      (concat org-directory "notes.org"))
 
 (setq org-agenda-custom-commands
       '(("c" "Simple agenda view"
@@ -67,7 +80,6 @@ There are two things you can do about this warning:
           (agenda "")
           (alltodo "")))))
 
-
 (defun my/org-mode-hook ()
   "Stop the org-level headers from increasing in height relative to the other text."
   (dolist (face '(org-level-1
@@ -76,12 +88,6 @@ There are two things you can do about this warning:
                   org-level-4
                   org-level-5))
     (set-face-attribute face nil :weight 'semi-bold :height 1.0)))
-
-(setq monokai-height-minus-1 0.8
-      monokai-height-plus-1 1.1
-      monokai-height-plus-2 1.15
-      monokai-height-plus-3 1.2
-      monokai-height-plus-4 1.3)
 
 ;; org -- todo settings
 (setq org-todo-keyword-faces
@@ -103,20 +109,41 @@ There are two things you can do about this warning:
   :hook
   (org-mode . org-fancy-priorities-mode)
   :config
-  (setq org-fancy-priorities-list '("⬆" "!" "⬇")))
+  (setq org-fancy-priorities-list '("*" "!" "-")))
 
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Programming
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'yasnippet)
 (yas-global-mode 1)
 
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
 
 (define-key lisp-interaction-mode-map
   (kbd "<C-return>") 'eval-last-sexp)
+
+;; clojure
+(require 'rainbow-delimiters)
+(add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
+
+(autoload 'enable-paredit-mode "paredit"
+  "Turn on pseudo-structural editing of Lisp code."
+  t)
+(add-hook 'emacs-lisp-mode-hook       'enable-paredit-mode)
+(add-hook 'lisp-mode-hook             'enable-paredit-mode)
+(add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
+(add-hook 'scheme-mode-hook           'enable-paredit-mode)
+(add-hook 'clojure-mode-hook          'enable-paredit-mode)
+
+(load "command-log-mode")
 
 ;; Language modes
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; (autoload 'csharp-mode "csharp-mode"
 ;;   "Major mode for editing C# code." t)
+
 
 ;; (setq auto-mode-alist 
 ;;       (cons '( "\\.cs\\'" . csharp-mode )
@@ -143,21 +170,8 @@ There are two things you can do about this warning:
 ;; ;; (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
 ;; ;; (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete)
 
-
-
-
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
     (use-package org-fancy-priorities org-bullets paredit rainbow-delimiters yasnippet yasnippet-snippets org-noter pdf-tools zop-to-char zenburn-theme which-key volatile-highlights undo-tree super-save smartrep smartparens projectile operate-on-number move-text magit imenu-anywhere hl-todo guru-mode gitignore-mode gitconfig-mode git-timemachine gist flycheck expand-region editorconfig easy-kill discover-my-major diminish diff-hl crux cider browse-kill-ring better-defaults beacon anzu ace-window))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-;; Packages
+(custom-set-faces )
