@@ -18,6 +18,7 @@ There are two things you can do about this warning:
 (package-initialize)
 
 (require 'use-package)
+(load-library "find-lisp")
 
 (add-to-list 'load-path 
 	     "~/.emacs.d/lisp")
@@ -66,8 +67,12 @@ There are two things you can do about this warning:
       org-odd-levels-only t)
 
 (setq org-directory "~/Desktop/org/")
+;;(setq org-agenda-files
+;;      (list org-directory))
 (setq org-agenda-files
-      (list org-directory))
+      (append
+       (find-lisp-find-files "~/Desktop/org/" "\.org$")
+       (find-lisp-find-files "~/Desktop/workorg/" "\.org$")))
 
 (setq org-default-notes-file
       (concat org-directory "notes.org"))
